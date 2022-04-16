@@ -48,20 +48,14 @@ public class Run {
   private void parse(Character c, boolean last) {
     if (OperatorSign.isSupportedOperator(c)) {
       operatorCollection.add(OperatorSign.valueOf(c));
-    }
-
-    if (canAddNumberToCollection(c)) {
+    } else if (canAddNumberToCollection(c)) {
       numberCollection.add(numberPiece.getNumber());
-    }
-
-    if (isNumberPiece(c)) {
+    } else if (isNumberPiece(c)) {
       numberPiece.add(c);
     }
 
-    if (last) {
-      if (numberPiece.hasNumber()) {
-        numberCollection.add(numberPiece.getNumber());
-      }
+    if (last && numberPiece.hasNumber()) {
+      numberCollection.add(numberPiece.getNumber());
     }
   }
 
