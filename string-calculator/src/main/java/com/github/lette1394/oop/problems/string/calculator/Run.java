@@ -28,11 +28,13 @@ public class Run {
       boolean last = i == chars.size() - 1;
 
       parse(ch, last,
-              parsedNumber -> numberCollection.add(parsedNumber),
+              parsedNumber -> {
+                numberCollection.add(parsedNumber);
+                if (existHighOperatorSign()) {
+                  addNumber();
+                }
+              },
               operatorSign -> operatorCollection.add(operatorSign));
-      if (existHighOperatorSign()) {
-        addNumber();
-      }
     }
     return getResult();
   }
