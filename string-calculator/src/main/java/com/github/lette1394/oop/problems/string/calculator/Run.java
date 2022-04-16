@@ -26,7 +26,7 @@ public class Run {
       if (existHighOperatorSign()) {
         addNumber();
       }
-      execute(c);
+      parse(c);
     }
     checkLast();
     return getResult();
@@ -53,7 +53,7 @@ public class Run {
     return numberCollection.getOne();
   }
 
-  private void execute(Character c) {
+  private void parse(Character c) {
     if (OperatorSign.isSupportedOperator(c)) {
       operatorCollection.add(OperatorSign.valueOf(c));
     }
