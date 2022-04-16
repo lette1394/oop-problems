@@ -26,19 +26,12 @@ public class Run {
       Character ch = chars.get(i);
       boolean last = i == chars.size() - 1;
 
+      parse(ch, last);
       if (existHighOperatorSign()) {
         addNumber();
       }
-      parse(ch, last);
     }
-    checkLast();
     return getResult();
-  }
-
-  private void checkLast() {
-    if (existHighOperatorSign()) {
-      addNumber();
-    }
   }
 
   private String getResult() {
