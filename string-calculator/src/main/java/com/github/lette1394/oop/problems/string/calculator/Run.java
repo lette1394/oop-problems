@@ -23,6 +23,9 @@ public class Run {
             .toList();
 
     for (Character c : chars) {
+      if (existHighOperatorSign()) {
+        addNumber();
+      }
       execute(c);
     }
     checkLast();
@@ -51,10 +54,6 @@ public class Run {
   }
 
   private void execute(Character c) {
-    if (existHighOperatorSign()) {
-      addNumber();
-    }
-
     if (OperatorSign.isSupportedOperator(c)) {
       operatorCollection.add(OperatorSign.valueOf(c));
     }
@@ -96,6 +95,4 @@ public class Run {
   private boolean canAddNumberToCollection(char c) {
     return c == ' ' && numberPiece.hasNumber();
   }
-
-
 }
