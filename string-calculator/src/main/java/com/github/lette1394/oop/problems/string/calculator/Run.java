@@ -5,6 +5,7 @@ import com.github.lette1394.oop.problems.string.calculator.collection.NumberColl
 import com.github.lette1394.oop.problems.string.calculator.collection.OperatorCollection;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Run {
 
@@ -26,7 +27,9 @@ public class Run {
       Character ch = chars.get(i);
       boolean last = i == chars.size() - 1;
 
-      parse(ch, last);
+      parse(ch, last,
+              parsedNumber -> numberCollection.add(parsedNumber),
+              operatorSign -> operatorCollection.add(operatorSign));
       if (existHighOperatorSign()) {
         addNumber();
       }
@@ -45,17 +48,20 @@ public class Run {
     return numberCollection.getOne();
   }
 
-  private void parse(Character c, boolean last) {
+  private void parse(Character c,
+                     boolean last,
+                     Consumer<String> whenNumberParsed,
+                     Consumer<OperatorSign> whenOperatorParsed) {
     if (OperatorSign.isSupportedOperator(c)) {
-      operatorCollection.add(OperatorSign.valueOf(c));
+      whenOperatorParsed.accept(OperatorSign.valueOf(c));
     } else if (canAddNumberToCollection(c)) {
-      numberCollection.add(numberPiece.getNumber());
+      whenNumberParsed.accept(numberPiece.getNumber());
     } else if (isNumberPiece(c)) {
       numberPiece.add(c);
     }
 
     if (last && numberPiece.hasNumber()) {
-      numberCollection.add(numberPiece.getNumber());
+      whenNumberParsed.accept(numberPiece.getNumber());
     }
   }
 
