@@ -22,21 +22,20 @@ public class Run {
             .mapToObj(c -> (char) c)
             .toList();
 
-    for (Character c : chars) {
+    for (int i = 0; i < chars.size(); i++) {
+      Character ch = chars.get(i);
+      boolean last = i == chars.size() - 1;
+
       if (existHighOperatorSign()) {
         addNumber();
       }
-      parse(c);
+      parse(ch, last);
     }
     checkLast();
     return getResult();
   }
 
   private void checkLast() {
-    if (numberPiece.hasNumber()) {
-      numberCollection.add(numberPiece.getNumber());
-    }
-
     if (existHighOperatorSign()) {
       addNumber();
     }
@@ -53,7 +52,7 @@ public class Run {
     return numberCollection.getOne();
   }
 
-  private void parse(Character c) {
+  private void parse(Character c, boolean last) {
     if (OperatorSign.isSupportedOperator(c)) {
       operatorCollection.add(OperatorSign.valueOf(c));
     }
@@ -64,6 +63,12 @@ public class Run {
 
     if (isNumberPiece(c)) {
       numberPiece.add(c);
+    }
+
+    if (last) {
+      if (numberPiece.hasNumber()) {
+        numberCollection.add(numberPiece.getNumber());
+      }
     }
   }
 
