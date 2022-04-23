@@ -4,7 +4,6 @@ import com.github.lette1394.oop.problems.string.calculator.calculate.OperationFa
 import com.github.lette1394.oop.problems.string.calculator.collection.NumberCollection;
 import com.github.lette1394.oop.problems.string.calculator.collection.OperatorCollection;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class Run {
@@ -19,23 +18,18 @@ public class Run {
   }
 
   public String calculate(String input) {
-    List<Character> chars = input.chars()
-            .mapToObj(c -> (char) c)
-            .toList();
+    Consumer<String> whenNumberParsed = parsedNumber -> {
+      numberCollection.add(parsedNumber);
+      if (existHighOperatorSign()) {
+        addNumber();
+      }
+    };
+    Consumer<OperatorSign> whenOperatorParsed = operatorSign -> {
+      operatorCollection.add(operatorSign);
+    };
+    UserInput userInput = new UserInput(whenNumberParsed, whenOperatorParsed);
 
-    for (int i = 0; i < chars.size(); i++) {
-      Character ch = chars.get(i);
-      boolean last = i == chars.size() - 1;
-
-      parse(ch, last,
-              parsedNumber -> {
-                numberCollection.add(parsedNumber);
-                if (existHighOperatorSign()) {
-                  addNumber();
-                }
-              },
-              operatorSign -> operatorCollection.add(operatorSign));
-    }
+    userInput.parse(input);
     return getResult();
   }
 
@@ -48,27 +42,6 @@ public class Run {
     }
 
     return numberCollection.getOne();
-  }
-
-  private void parse(Character c,
-                     boolean last,
-                     Consumer<String> whenNumberParsed,
-                     Consumer<OperatorSign> whenOperatorParsed) {
-    if (OperatorSign.isSupportedOperator(c)) {
-      whenOperatorParsed.accept(OperatorSign.valueOf(c));
-    } else if (canAddNumberToCollection(c)) {
-      whenNumberParsed.accept(numberPiece.getNumber());
-    } else if (isNumberPiece(c)) {
-      numberPiece.add(c);
-    }
-
-    if (last && numberPiece.hasNumber()) {
-      whenNumberParsed.accept(numberPiece.getNumber());
-    }
-  }
-
-  private boolean isNumberPiece(Character c) {
-    return c >= '0' && c <= '9';
   }
 
   private void addNumber() {
@@ -90,9 +63,5 @@ public class Run {
 
     OperatorSign lastOperator = operatorCollection.peek();
     return lastOperator == OperatorSign.divide || lastOperator == OperatorSign.multiply;
-  }
-
-  private boolean canAddNumberToCollection(char c) {
-    return c == ' ' && numberPiece.hasNumber();
   }
 }
